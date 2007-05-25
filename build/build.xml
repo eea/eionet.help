@@ -1,0 +1,21 @@
+<project name="helpservice" default="buildjar" basedir=".">
+
+  <!-- set global properties for this build -->
+  <property name="src" value="../src"/>
+  <property name="classes" value="../classes"/>
+  <property name="lib.dir" value="../lib"/>
+
+  <target name="compile">
+    <!-- Compile the java code from ${src} into ${classes} -->
+    <javac debug="on" deprecation="off"
+       srcdir="${src}"
+       destdir="${classes}"
+       classpath="${lib.dir}/tee-util.jar;${lib.dir}/uit-security.jar;${lib.dir}/xmlserver.jar"/>
+  </target>
+
+  <target name="buildjar" depends="compile"> 
+    <jar basedir="${classes}" jarfile="${lib.dir}/uit-help.jar" includes="**/*.class"/>
+  </target>
+
+</project>
+
