@@ -216,6 +216,27 @@ public class RemoteService
         Helps.reset();
         return "";
     }
+    
+    /**
+     * 
+     * @param screenID
+     * @param areaID
+     * @param html
+     * @param popupWidth
+     * @param popupLength
+     * @param description
+     * @return
+     * @throws HelpException
+     * @throws SignOnException
+     */
+    public String editArea(String screenID, String areaID, String html, String popupWidth, String popupLength, String description)
+    	throws HelpException, SignOnException
+    {
+        guard("hc");
+        Helps.editArea(screenID, areaID, html, popupWidth, popupLength, description);
+        Helps.reset();
+        return "";
+    }
 
     /**
      * @return

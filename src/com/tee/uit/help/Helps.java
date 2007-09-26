@@ -376,8 +376,9 @@ public class Helps
             HelpsDB.closeConnection();
         }
     }
-
+    
     /**
+     * 
      * @param screenID
      * @param areaID
      * @param html
@@ -386,6 +387,22 @@ public class Helps
      * @throws HelpException
      */
     public static void editArea(String screenID, String areaID, String html, String popupWidth, String popupLength)
+    	throws HelpException
+    {
+    	editArea(screenID, areaID, html, popupWidth, popupLength, null);
+    }
+    
+    /**
+     * 
+     * @param screenID
+     * @param areaID
+     * @param html
+     * @param popupWidth
+     * @param popupLength
+     * @param description
+     * @throws HelpException
+     */
+    public static void editArea(String screenID, String areaID, String html, String popupWidth, String popupLength, String description)
         throws HelpException
     {
         Exception exception;
@@ -397,8 +414,12 @@ public class Helps
             gen.setField("POPUP_WIDTH", popupWidth);
         if(!Util.nullString(popupLength))
             gen.setField("POPUP_LENGTH", popupLength);
+        if(description!=null)
+            gen.setField("DESCRIPTION", description);
+        
         if(Util.nullString(gen.getValues()))
             return;
+        
         StringBuffer buf = (new StringBuffer(gen.updateStatement())).append(" where ").append("SCREEN_ID=").append(Util.strLiteral(screenID)).append(" and ").append("AREA_ID=").append(Util.strLiteral(areaID)).append(" and ").append("LANGUAGE=").append(Util.strLiteral(""));
         Connection conn = null;
         try
