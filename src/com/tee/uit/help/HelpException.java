@@ -1,25 +1,22 @@
 package com.tee.uit.help;
 
 /**
- * 
+ *
  */
-public class HelpException extends Exception
-{
+public class HelpException extends Exception {
 
     /**
      * @param t
      * @param s
      */
-    public HelpException(Throwable t, String s)
-    {
+    public HelpException(Throwable t, String s) {
         super(s);
     }
 
     /**
      * @param s
      */
-    public HelpException(String s)
-    {
+    public HelpException(String s) {
         super(s);
     }
 }

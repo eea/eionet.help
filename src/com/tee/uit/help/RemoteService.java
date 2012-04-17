@@ -1,28 +1,29 @@
 package com.tee.uit.help;
 
-import com.tee.uit.security.*;
-import java.io.PrintStream;
-import java.util.*;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
+import com.tee.uit.security.AccessController;
+import com.tee.uit.security.AppUser;
+import com.tee.uit.security.SignOnException;
 
 /**
- * 
+ *
  */
-public class RemoteService
-{
+public class RemoteService {
 
     /**
-     * 
+     *
      */
-    public RemoteService()
-    {
+    public RemoteService() {
         user = null;
     }
 
     /**
      * @param user
      */
-    public RemoteService(AppUser user)
-    {
+    public RemoteService(AppUser user) {
         this.user = null;
         this.user = user;
     }
@@ -32,18 +33,16 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public Vector getScreens()
-        throws HelpException, SignOnException
-    {
+    public Vector getScreens() throws HelpException, SignOnException {
         guard();
         Vector v = new Vector();
         Hashtable screens = Helps.getHelps();
-        if(screens == null)
+        if (screens == null) {
             return v;
+        }
         Hashtable hash;
-        for(Iterator iter = screens.values().iterator(); iter.hasNext(); v.add(hash))
-        {
-            Screen screen = (Screen)iter.next();
+        for (Iterator iter = screens.values().iterator(); iter.hasNext(); v.add(hash)) {
+            Screen screen = (Screen) iter.next();
             hash = new Hashtable();
             hash.put("id", screen.getID());
             hash.put("descr", screen.getDescription());
@@ -58,24 +57,24 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public Vector getAreas(String screenID)
-        throws HelpException, SignOnException
-    {
+    public Vector getAreas(String screenID) throws HelpException, SignOnException {
         guard();
         Vector v = new Vector();
         Hashtable screens = Helps.getHelps();
-        if(screens == null)
+        if (screens == null) {
             return v;
-        Screen screen = (Screen)screens.get(screenID);
-        if(screen == null)
+        }
+        Screen screen = (Screen) screens.get(screenID);
+        if (screen == null) {
             return v;
+        }
         Hashtable areas = screen.getAreas();
-        if(areas == null)
+        if (areas == null) {
             return v;
+        }
         Hashtable hash;
-        for(Iterator iter = areas.values().iterator(); iter.hasNext(); v.add(hash))
-        {
-            Area area = (Area)iter.next();
+        for (Iterator iter = areas.values().iterator(); iter.hasNext(); v.add(hash)) {
+            Area area = (Area) iter.next();
             hash = new Hashtable();
             hash.put("id", area.getID());
             hash.put("descr", area.getDescription());
@@ -95,23 +94,21 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public Hashtable getHtmls(String screenID, String areaID)
-        throws HelpException, SignOnException
-    {
+    public Hashtable getHtmls(String screenID, String areaID) throws HelpException, SignOnException {
         guard();
         Hashtable hash = new Hashtable();
         Hashtable screens = Helps.getHelps();
-        if(screens == null)
+        if (screens == null) {
             return hash;
-        Screen screen = (Screen)screens.get(screenID);
-        if(screen == null)
+        }
+        Screen screen = (Screen) screens.get(screenID);
+        if (screen == null) {
             return hash;
+        }
         Area area = screen.getArea(areaID);
-        if(area == null)
-        {
+        if (area == null) {
             return hash;
-        } else
-        {
+        } else {
             hash = area.getHTMLs();
             return hash;
         }
@@ -124,9 +121,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String createScreen(String id, String descr)
-        throws HelpException, SignOnException
-    {
+    public String createScreen(String id, String descr) throws HelpException, SignOnException {
         guard("hc");
         Helps.createScreen(id, descr);
         Helps.reset();
@@ -141,9 +136,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String createArea(String screenID, String id, String descr)
-        throws HelpException, SignOnException
-    {
+    public String createArea(String screenID, String id, String descr) throws HelpException, SignOnException {
         guard("hc");
         Helps.createArea(screenID, id, descr);
         Helps.reset();
@@ -156,9 +149,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String removeScreens(Vector ids)
-        throws HelpException, SignOnException
-    {
+    public String removeScreens(Vector ids) throws HelpException, SignOnException {
         guard("hc");
         Helps.removeScreens(ids);
         Helps.reset();
@@ -172,9 +163,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String removeAreas(String screenID, Vector ids)
-        throws HelpException, SignOnException
-    {
+    public String removeAreas(String screenID, Vector ids) throws HelpException, SignOnException {
         guard("hc");
         Helps.removeAreas(screenID, ids);
         Helps.reset();
@@ -189,9 +178,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String editHtml(String screenID, String areaID, String text)
-        throws HelpException, SignOnException
-    {
+    public String editHtml(String screenID, String areaID, String text) throws HelpException, SignOnException {
         guard("hc");
         Helps.editHtml(screenID, areaID, text);
         Helps.reset();
@@ -209,16 +196,15 @@ public class RemoteService
      * @throws SignOnException
      */
     public String editArea(String screenID, String areaID, String html, String popupWidth, String popupLength)
-        throws HelpException, SignOnException
-    {
+    throws HelpException, SignOnException {
         guard("hc");
         Helps.editArea(screenID, areaID, html, popupWidth, popupLength);
         Helps.reset();
         return "";
     }
-    
+
     /**
-     * 
+     *
      * @param screenID
      * @param areaID
      * @param html
@@ -230,8 +216,7 @@ public class RemoteService
      * @throws SignOnException
      */
     public String editArea(String screenID, String areaID, String html, String popupWidth, String popupLength, String description)
-    	throws HelpException, SignOnException
-    {
+    throws HelpException, SignOnException {
         guard("hc");
         Helps.editArea(screenID, areaID, html, popupWidth, popupLength, description);
         Helps.reset();
@@ -243,9 +228,7 @@ public class RemoteService
      * @throws HelpException
      * @throws SignOnException
      */
-    public String reset()
-        throws HelpException, SignOnException
-    {
+    public String reset() throws HelpException, SignOnException {
         guard("hc");
         Helps.reset();
         return "";
@@ -254,65 +237,55 @@ public class RemoteService
     /**
      * @return
      */
-    public static String[] methodNames()
-    {
-        String r[] = {
-            "getScreens", "getAreas", "getHtmls", "createScreen", "createArea", "removeScreens", "removeAreas", "editHtml", "editArea", "reset"
-        };
+    public static String[] methodNames() {
+        String r[] =
+        { "getScreens", "getAreas", "getHtmls", "createScreen", "createArea", "removeScreens", "removeAreas", "editHtml",
+                "editArea", "reset" };
         return r;
     }
 
     /**
      * @return
      */
-    public static String[] valueTypes()
-    {
-        String r[] = {
-            "ARRAY", "ARRAY", "STRUCT", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING"
-        };
+    public static String[] valueTypes() {
+        String r[] = { "ARRAY", "ARRAY", "STRUCT", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING", "STRING" };
         return r;
     }
 
     /**
      * @throws SignOnException
      */
-    private void guard()
-        throws SignOnException
-    {
-        if(user == null)
+    private void guard() throws SignOnException {
+        if (user == null) {
             throw new SignOnException("Not authenticated!");
-        else
+        } else {
             return;
+        }
     }
 
     /**
      * @param prm
      * @throws SignOnException
      */
-    private void guard(String prm)
-        throws SignOnException
-    {
+    private void guard(String prm) throws SignOnException {
         guard();
         String prms = AccessController.getPermissions(user.getUserName());
-        if(prms != null && prms.indexOf("/:" + prm) == -1)
+        if (prms != null && prms.indexOf("/:" + prm) == -1) {
             throw new SignOnException("Not permitted!");
-        else
+        } else {
             return;
+        }
     }
 
     /**
      * @param args
      */
-    public static void main(String args[])
-    {
-        try
-        {
+    public static void main(String args[]) {
+        try {
             AppUser u = new AppUser();
             u.authenticate("test", "xxx");
             RemoteService r = new RemoteService(u);
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
             e.printStackTrace(System.out);
         }

@@ -3,16 +3,14 @@ package com.tee.uit.help;
 import java.util.Hashtable;
 
 /**
- * 
+ *
  */
-public class Screen
-{
+public class Screen {
 
     /**
      * @param id
      */
-    public Screen(String id)
-    {
+    public Screen(String id) {
         this.id = null;
         descr = null;
         areas = null;
@@ -22,34 +20,31 @@ public class Screen
     /**
      * @param area
      */
-    public void addArea(Area area)
-    {
-        if(areas == null)
+    public void addArea(Area area) {
+        if (areas == null) {
             areas = new Hashtable();
+        }
         areas.put(area.getID(), area);
     }
 
     /**
      * @param descr
      */
-    public void setDescription(String descr)
-    {
+    public void setDescription(String descr) {
         this.descr = descr;
     }
 
     /**
      * @return
      */
-    public String getDescription()
-    {
+    public String getDescription() {
         return descr;
     }
 
     /**
      * @return
      */
-    public String getID()
-    {
+    public String getID() {
         return id;
     }
 
@@ -57,24 +52,21 @@ public class Screen
      * @param areaID
      * @return
      */
-    public Area getArea(String areaID)
-    {
-        return (Area)areas.get(areaID);
+    public Area getArea(String areaID) {
+        return (Area) areas.get(areaID);
     }
 
     /**
      * @return
      */
-    public Hashtable getAreas()
-    {
+    public Hashtable getAreas() {
         return areas;
     }
 
     /**
      * @param args1
      */
-    public static void main(String args1[])
-    {
+    public static void main(String args1[]) {
     }
 
     public static final String ID = "id";

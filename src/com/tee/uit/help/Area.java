@@ -3,17 +3,15 @@ package com.tee.uit.help;
 import java.util.Hashtable;
 
 /**
- * 
+ *
  */
-public class Area
-{
+public class Area {
 
     /**
      * @param screenID
      * @param id
      */
-    public Area(String screenID, String id)
-    {
+    public Area(String screenID, String id) {
         this.id = null;
         this.screenID = null;
         descr = null;
@@ -28,80 +26,70 @@ public class Area
     /**
      * @return
      */
-    public String getID()
-    {
+    public String getID() {
         return id;
     }
 
     /**
      * @param descr
      */
-    public void setDescription(String descr)
-    {
+    public void setDescription(String descr) {
         this.descr = descr;
     }
 
     /**
      * @return
      */
-    public String getDescription()
-    {
+    public String getDescription() {
         return descr;
     }
 
     /**
      * @param popupWidth
      */
-    public void setPopupWidth(String popupWidth)
-    {
+    public void setPopupWidth(String popupWidth) {
         this.popupWidth = popupWidth;
     }
 
     /**
      * @return
      */
-    public String getPopupWidth()
-    {
+    public String getPopupWidth() {
         return popupWidth;
     }
 
     /**
      * @param popupLength
      */
-    public void setPopupLength(String popupLength)
-    {
+    public void setPopupLength(String popupLength) {
         this.popupLength = popupLength;
     }
 
     /**
      * @return
      */
-    public String getPopupLength()
-    {
+    public String getPopupLength() {
         return popupLength;
     }
 
     /**
      * @param md5
      */
-    public void setMd5(String md5)
-    {
+    public void setMd5(String md5) {
         this.md5 = md5;
     }
 
     /**
      * @return
      */
-    public String getMd5()
-    {
+    public String getMd5() {
         return md5;
     }
 
     /**
      * @return
      */
-    public String getScreenID()
-    {
+    public String getScreenID() {
         return screenID;
     }
 
@@ -109,49 +97,48 @@ public class Area
      * @param html
      * @param lang
      */
-    public void setHTML(String html, String lang)
-    {
-        if(html != null && lang != null)
+    public void setHTML(String html, String lang) {
+        if (html != null && lang != null) {
             htmls.put(lang, html);
+        }
     }
 
     /**
      * @param lang
      * @return
      */
-    public String getHTML(String lang)
-    {
-        if(lang == null)
+    public String getHTML(String lang) {
+        if (lang == null) {
             lang = "";
-        String html = (String)htmls.get(lang);
-        if(html == null)
-            html = (String)htmls.get("");
-        if(html == null)
+        }
+        String html = (String) htmls.get(lang);
+        if (html == null) {
+            html = (String) htmls.get("");
+        }
+        if (html == null) {
             html = "";
+        }
         return html;
     }
 
     /**
      * @return
      */
-    public Hashtable getHTMLs()
-    {
+    public Hashtable getHTMLs() {
         return htmls;
     }
 
     /**
      * @param htmls
      */
-    public void setHTMLs(Hashtable htmls)
-    {
+    public void setHTMLs(Hashtable htmls) {
         this.htmls = htmls;
     }
 
     /**
      * @param args1
      */
-    public static void main(String args1[])
-    {
+    public static void main(String args1[]) {
     }
 
     public static final String DEFAULT_LANG = "";

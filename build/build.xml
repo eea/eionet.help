@@ -10,10 +10,10 @@
     <javac debug="on" deprecation="off"
        srcdir="${src}"
        destdir="${classes}"
-       classpath="${lib.dir}/tee-util.jar;${lib.dir}/uit-security.jar;${lib.dir}/xmlserver.jar"/>
+       classpath="${lib.dir}/uit-security.jar;"/>
   </target>
 
-  <target name="buildjar" depends="compile"> 
+  <target name="buildjar" depends="compile">
     <jar basedir="${classes}" jarfile="${lib.dir}/uit-help.jar" includes="**/*.class"/>
   </target>
 
