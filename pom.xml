@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+  	<groupId>eionet</groupId>
+  	<artifactId>uit-help</artifactId>
+  	<version>1.1</version>
+  	<name>Help service</name>
+    <!-- configuration of Maven repositories to be used -->
+
+    <repositories>
+        <repository>
+            <id>project-local</id>
+            <name>project-local repository</name>
+            <layout>default</layout>
+            <url>file:///${basedir}/lib</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+	<!--  dependencies -->
+    <dependencies>
+        <dependency>
+            <groupId>eionet</groupId>
+            <artifactId>uit-security</artifactId>
+            <version>1.1c</version>
+        </dependency>
+	</dependencies>
+  </project>
