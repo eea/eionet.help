@@ -1,8 +1,9 @@
-package com.tee.uit.help.util;
+package eionet.help.util;
 
 public class Util {
+
     /**
-     * Converts a string to valid SQL string literal
+     * Converts a string to valid SQL string literal.
      */
     public static String strLiteral(String in) {
         in = (in != null ? in : "");
@@ -20,8 +21,9 @@ public class Util {
 
         return ret.toString();
     }
+
     /**
-     * Returns true, if argument string does not contain anything (either is null or empty string).
+     * Returns true if argument string does not contain anything (either is null or empty string).
      */
     public static boolean nullString(String str) {
         return (str == null || str.length() == 0);

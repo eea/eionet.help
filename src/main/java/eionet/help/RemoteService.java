@@ -1,12 +1,12 @@
-package com.tee.uit.help;
+package eionet.help;
 
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 
-import com.tee.uit.security.AccessController;
-import com.tee.uit.security.AppUser;
-import com.tee.uit.security.SignOnException;
+import eionet.acl.AccessController;
+import eionet.acl.AppUser;
+import eionet.acl.SignOnException;
 
 /**
  *

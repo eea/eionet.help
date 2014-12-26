@@ -1,4 +1,4 @@
-package com.tee.uit.help;
+package eionet.help;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,8 +10,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-import com.tee.uit.help.util.SQLGenerator;
-import com.tee.uit.help.util.Util;
+import eionet.help.util.SQLGenerator;
+import eionet.help.util.Util;
 
 /**
  *

@@ -1,4 +1,4 @@
-package com.tee.uit.help;
+package eionet.help;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

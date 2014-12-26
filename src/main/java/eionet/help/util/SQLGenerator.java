@@ -1,19 +1,19 @@
-package com.tee.uit.help.util;
+package eionet.help.util;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
 
 /**
  * Stores database table field name/field value pairs and provides methods to generate SQL 'INSERT', 'UPDATE' and 'DELETE'
- * statements (without the constraint part).<BR>
- * <BR>
- *
- * Date: 15.04.00<BR>
+ * statements (without the constraint part).
+ * <p>
+ * Date: 15.04.00
+ * </p>
  * Updates:
- * <UL>
- * <LI>05.07.00 - added clear() method for resetting generator's internal state;
- * <LI>added check for a need for escaping in setField() method.
- * </UL>
+ * <ul>
+ * <li>05.07.00 - added clear() method for resetting generator's internal state;</li>
+ * <li>added check for a need for escaping in setField() method.</li>
+ * </ul>
  *
  * @author Rando Valt
  */
