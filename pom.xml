@@ -2,7 +2,7 @@
 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>eionet</groupId>
-    <artifactId>uit-help</artifactId>
+    <artifactId>help</artifactId>
     <version>2.0</version>
     <name>Help Module</name>
 
@@ -52,4 +52,5 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xs
             <version>2.0</version>
         </dependency>
     </dependencies>
-  </project>
+
+</project>
