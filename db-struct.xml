@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+  <!--
+     You can run this change log on your database as many times as you want, it will ignore the
+     changes that are already applied. It also means that you can't modify an existing revision.
+     Always add to the end.
+
+     Use the maven goals: liquibase:update and liquibase:status
+      Potentially with -Dliquibase.dropFirst=true
+ -->
+
+    <changeSet author="roug" id="rev-1">
+        <createTable tableName="HLP_AREA">
+            <column defaultValue="" name="AREA_ID" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="SCREEN_ID" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="DESCRIPTION" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="LANGUAGE" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="HTML" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="" name="MD5" type="VARCHAR(32)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="400" name="POPUP_WIDTH" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column defaultValue="400" name="POPUP_LENGTH" type="VARCHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+             <replace replace="LONGTEXT" with="text"/>
+         </modifySql>
+        <modifySql dbms="mysql">
+             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+    </changeSet>
+
+    <changeSet author="roug" id="rev-2">
+        <addPrimaryKey columnNames="AREA_ID, SCREEN_ID, LANGUAGE" tableName="HLP_AREA"/>
+    </changeSet>
+
+    <changeSet author="roug" id="rev-3">
+        <createTable tableName="HLP_SCREEN">
+            <column defaultValue="" name="SCREEN_ID" type="VARCHAR(100)">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="DESCRIPTION" type="TEXT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <modifySql dbms="mysql">
+             <replace replace="LONGTEXT" with="text"/>
+         </modifySql>
+        <modifySql dbms="mysql">
+             <append value=" ENGINE=InnoDB DEFAULT CHARSET=utf8"/>
+        </modifySql>
+    </changeSet>
+
+</databaseChangeLog>
