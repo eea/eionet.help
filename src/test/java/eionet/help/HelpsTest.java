@@ -5,8 +5,8 @@ import eionet.acl.SignOnException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Hashtable;
 import java.util.Properties;
-import java.util.ResourceBundle;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
@@ -95,7 +95,7 @@ public class HelpsTest {
 
     @Test
     public void loadProps() throws Exception {
-        ResourceBundle rb = Helps.getProperties();
+        Hashtable<Object, Object> rb = Helps.getProperties();
     }
 
     @Test

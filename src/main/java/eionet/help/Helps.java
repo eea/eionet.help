@@ -1,14 +1,23 @@
 package eionet.help;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.Vector;
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 
 import eionet.help.util.SQLGenerator;
 import eionet.help.util.Util;
@@ -17,6 +26,12 @@ import eionet.help.util.Util;
  *
  */
 public class Helps {
+
+    public static final String RESOURCE_BUNDLE_NAME = "help";
+    public static final String TOMCAT_CONTEXT = "java:comp/env/";
+
+    private static Hashtable helps = null;
+    private static Hashtable<Object, Object> props = null;
 
     public Helps() {
     }
@@ -158,6 +173,7 @@ public class Helps {
     }
 
     /**
+     * Load the help texts in the <code>helps</code> member variable.
      * @throws HelpException
      */
     public static void load() throws HelpException {
@@ -408,15 +424,50 @@ public class Helps {
     }
 
     /**
-     * @return
-     * @throws HelpException
+     * Load properties into the props member variable.
+     *
+     * @throws HelpException if the properties file is missing.
      */
-    public static ResourceBundle getProperties() throws HelpException {
+    public static Hashtable<Object, Object> getProperties() throws HelpException {
         if (props == null) {
+            props = new Hashtable<Object, Object>();
             try {
-                props = ResourceBundle.getBundle("uit");
-            } catch (MissingResourceException mre) {
-                throw new HelpException("uit.properties file is missing in the classpath");
+                Context initContext = new InitialContext();
+                if (initContext != null) {
+                    // Load from JNDI. Tomcat puts its stuff under java:comp/env:
+                    for (Enumeration<Binding> e = initContext.listBindings(TOMCAT_CONTEXT + RESOURCE_BUNDLE_NAME); e.hasMoreElements();) {
+                        Binding binding = e.nextElement();
+                        props.put(binding.getName(), binding.getObject());
+                    }
+                }
+            } catch (NamingException mre) {
+                //throw new Exception("JNDI not configured properly");
+            }
+
+            // Load from properties file
+            if (props.size() == 0 || props.containsKey("propertiesfile")) {
+                try {
+                    Properties fileProps = new Properties();
+                    InputStream inStream = null;
+
+                    if (props.containsKey("propertiesfile")) {
+                        try {
+                            inStream = new FileInputStream((String) props.get("propertiesfile"));
+                        } catch (Exception e) {
+                            throw new HelpException("Properties file not found");
+                        }
+                    } else {
+                        inStream = Helps.class.getResourceAsStream("/" + RESOURCE_BUNDLE_NAME + ".properties");
+                        if (inStream == null) {
+                            throw new HelpException("Properties file is not found in the classpath");
+                        }
+                    }
+                    fileProps.load(inStream);
+                    inStream.close();
+                    props.putAll(fileProps);
+                } catch (IOException mre) {
+                    throw new HelpException("Properties file is not readable");
+                }
             }
         }
         return props;
@@ -428,8 +479,5 @@ public class Helps {
     public static void main(String args[]) {
         System.out.println(get("Opening page", "Overall information"));
     }
-
-    private static Hashtable helps = null;
-    private static ResourceBundle props = null;
 
 }

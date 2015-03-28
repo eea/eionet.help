@@ -5,12 +5,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ResourceBundle;
+import java.util.Hashtable;
+import javax.sql.DataSource;
 
 /**
  *
  */
 public class HelpsDB {
+
+    private static Connection conn = null;
 
     /**
      *
@@ -25,11 +28,22 @@ public class HelpsDB {
     public static Connection getConnection() throws HelpException {
         try {
             if (conn == null || conn.isClosed()) {
-                ResourceBundle props = Helps.getProperties();
-                Class.forName(props.getString("db.driver"));
-                conn =
-                    DriverManager.getConnection(props.getString("db.url"), props.getString("db.user"),
-                            props.getString("db.pwd"));
+                Hashtable<Object, Object> props = Helps.getProperties();
+                if (props.containsKey("help/jndiname")) {
+                    String jndiName = (String) props.get("help/jndiname");
+                    DataSource dataSource = (DataSource) props.get(jndiName);
+                    conn = dataSource.getConnection();
+                } else {
+                    if (props.containsKey("jdbc/helpdb")) {
+                        DataSource dataSource = (DataSource) props.get("jdbc/helpdb");
+                        conn = dataSource.getConnection();
+                    } else {
+                        Class.forName((String)props.get("db.driver"));
+                        conn = DriverManager.getConnection((String)props.get("db.url"),
+                                (String)props.get("db.user"),
+                                (String)props.get("db.pwd"));
+                    }
+                }
             }
         } catch (SQLException sqle) {
             throw new HelpException("DB error: " + sqle.toString());
@@ -84,7 +98,5 @@ public class HelpsDB {
         closeStatement(stmt);
         closeConnection();
     }
-
-    private static Connection conn = null;
 
 }

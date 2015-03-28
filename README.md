@@ -23,3 +23,9 @@ The old version uses this.
 </dependency>
 ```
 
+Configuration
+-------------
+The module need a database connection to read and write to the tables HLP_AREA and HLP_SCREEN. In versions 1 and 2 the module loaded the uit.properties file and read the following properties: `db.driver`, `db.url`, `db.user` and `db.pwd`. The parameters didn't have to be the same as the main application, but it was common practice. From version 3 you can use JNDI. The module will scan JNDI for Tomcat resource under `help/`. If a `help/propertiesfile` value is found the JNDI names are supplemented with values from the file in the value. If no JNDI variables are found the module falls back to a `help.properties` file in the class path.
+After having loaded all the properties, the module will first look for the name `help/jndiname`, and the value is expected to be a string. If found the value is the JNDI name to look up the data source under. This makes it possible to reuse the connection pool from the main application. If not found then the data source is looked up under `jdbc/helpdb`. If it is not available the module will create a connection from `db.driver`, `db.url`, `db.user` and `db.pwd`.
+
+
