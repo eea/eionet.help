@@ -29,13 +29,13 @@ public class HelpsDB {
         try {
             if (conn == null || conn.isClosed()) {
                 Hashtable<Object, Object> props = Helps.getProperties();
-                if (props.containsKey("help/jndiname")) {
-                    String jndiName = (String) props.get("help/jndiname");
+                if (props.containsKey("jndiname")) {
+                    String jndiName = (String) props.get("jndiname");
                     DataSource dataSource = (DataSource) props.get(jndiName);
                     conn = dataSource.getConnection();
                 } else {
-                    if (props.containsKey("jdbc/helpdb")) {
-                        DataSource dataSource = (DataSource) props.get("jdbc/helpdb");
+                    if (props.containsKey(Helps.DATASOURCE_NAME)) {
+                        DataSource dataSource = (DataSource) props.get(Helps.DATASOURCE_NAME);
                         conn = dataSource.getConnection();
                     } else {
                         Class.forName((String)props.get("db.driver"));

@@ -29,6 +29,7 @@ public class Helps {
 
     public static final String RESOURCE_BUNDLE_NAME = "help";
     public static final String TOMCAT_CONTEXT = "java:comp/env/";
+    static final String DATASOURCE_NAME = "jdbc/helpdb";
 
     private static Hashtable helps = null;
     private static Hashtable<Object, Object> props = null;
@@ -417,10 +418,18 @@ public class Helps {
     }
 
     /**
-     *
+     * Invalidate cached pages.
      */
     public static void reset() {
         helps = null;
+    }
+
+    /**
+     * Reset properties for unit tests.
+     */
+    static void resetProps() {
+        reset();
+        props = null;
     }
 
     /**
@@ -431,8 +440,9 @@ public class Helps {
     public static Hashtable<Object, Object> getProperties() throws HelpException {
         if (props == null) {
             props = new Hashtable<Object, Object>();
+            Context initContext = null;
             try {
-                Context initContext = new InitialContext();
+                initContext = new InitialContext();
                 if (initContext != null) {
                     // Load from JNDI. Tomcat puts its stuff under java:comp/env:
                     for (Enumeration<Binding> e = initContext.listBindings(TOMCAT_CONTEXT + RESOURCE_BUNDLE_NAME); e.hasMoreElements();) {
@@ -441,7 +451,16 @@ public class Helps {
                     }
                 }
             } catch (NamingException mre) {
-                //throw new Exception("JNDI not configured properly");
+                // throw new HelpException("JNDI not configured properly");
+            }
+            try {
+                // Also add the a JDBC name if available.
+                if (initContext != null) {
+                    Object ds = initContext.lookup(TOMCAT_CONTEXT + DATASOURCE_NAME);
+                    props.put(DATASOURCE_NAME, ds);
+                }
+            } catch (NamingException mre) {
+                // throw new HelpException("JNDI not configured properly");
             }
 
             // Load from properties file
@@ -471,13 +490,6 @@ public class Helps {
             }
         }
         return props;
-    }
-
-    /**
-     * @param args
-     */
-    public static void main(String args[]) {
-        System.out.println(get("Opening page", "Overall information"));
     }
 
 }

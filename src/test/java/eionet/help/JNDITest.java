@@ -27,30 +27,32 @@ import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.Test;
+import org.h2.jdbcx.JdbcDataSource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+
 
 import static org.junit.Assert.assertEquals;
 
 /**
- *
+ * Let the module connect via JNDI. Check that it doesn't fall back to loading
+ * from the properties file.
  */
-public class HelpsTest {
+public class JNDITest {
 
     @BeforeClass
     public static void loadDB() throws Exception {
-        Connection conn = HelpsDB.getConnection();
         Liquibase liquibase = null;
+        Connection conn = createDataSourceInIC().getConnection();
         try {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
             liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor(), database);
             liquibase.update("test");
-            conn.close();
-            conn = null;
         } catch (LiquibaseException e) {
             throw new DatabaseException(e);
         } finally {
             if (conn != null) {
                 try {
-                    conn.rollback();
                     conn.close();
                 } catch (SQLException e) {
                     //nothing to do
@@ -59,10 +61,34 @@ public class HelpsTest {
         }
     }
 
-    @AfterClass
-    public static void cleanUp() {
-        Helps.resetProps();
+    private static JdbcDataSource createDataSourceInIC() throws Exception {
+        // Construct DataSource
+        JdbcDataSource ds = new JdbcDataSource();
+        ds.setURL("jdbc:h2:file:target/jndidb");
+        ds.setUser("sa");
+        ds.setPassword("sa");
+        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
+        System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
+
+        Context ic = new InitialContext();
+        ic.createSubcontext("java:");
+        ic.createSubcontext("java:comp");
+        ic.createSubcontext("java:comp/env");
+        ic.createSubcontext("java:comp/env/jdbc");
+        ic.bind("java:comp/env/" + Helps.DATASOURCE_NAME, ds);
+        return ds;
     }
+
+    @AfterClass
+    public static void cleanUpIC() throws Exception {
+        Context ic = new InitialContext();
+        ic.unbind("java:comp/env/" + Helps.DATASOURCE_NAME);
+        ic.destroySubcontext("java:comp/env/jdbc");
+        ic.destroySubcontext("java:comp/env");
+        ic.destroySubcontext("java:comp");
+        ic.destroySubcontext("java:");
+        Helps.resetProps();
+    }   
 
     /**
      * Initialize the logging system. It is used by dbunit.
@@ -87,7 +113,7 @@ public class HelpsTest {
 
 
     private IDataSet readDataSet() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("testdata.xml");
+        InputStream is = getClass().getClassLoader().getResourceAsStream("testdata-for-jndi.xml");
         return new FlatXmlDataSetBuilder().build(is);
     }
 
@@ -98,18 +124,10 @@ public class HelpsTest {
         databaseTester.onSetup();
     }
 
-    @Rule
-    public ExpectedException exception = ExpectedException.none();
-
     @Test
-    public void loadProps() throws Exception {
-        Hashtable<Object, Object> rb = Helps.getProperties();
-    }
-
-    @Test
-    public void loadData() throws Exception {
-        String html = Helps.get("nr1", "announcements", "en");
-        assertEquals("We now have unit tests", html);
+    public void getJNDIScreen() throws Exception {
+        String html = Helps.get("jndi", "announcements", "en");
+        assertEquals("We now have JNDI unit tests", html);
     }
 
 }
