@@ -97,8 +97,8 @@ public class JNDITest {
         PropertyConfigurator.configure(logProperties);
     }
 
-    private IDataSet readDataSet() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("testdata-for-jndi.xml");
+    private IDataSet readDataSet(String sourceFile) throws Exception {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(sourceFile);
         return new FlatXmlDataSetBuilder().build(is);
     }
 
@@ -117,7 +117,7 @@ public class JNDITest {
         JNDISupport.addSubCtxToTomcat("jdbc");
         JNDISupport.addPropToTomcat(Helps.DATASOURCE_NAME, dataSource);
         Connection conn = HelpsDB.getConnection();
-        IDataSet dataSet = readDataSet();
+        IDataSet dataSet = readDataSet("testdata-for-jndi.xml");
         cleanlyInsert(dataSet, conn);
 
         String html = Helps.get("jndi", "announcements", "en");
@@ -131,7 +131,7 @@ public class JNDITest {
         JNDISupport.addSubCtxToTomcat(Helps.RESOURCE_BUNDLE_NAME);
         JNDISupport.addPropToTomcat(Helps.RESOURCE_BUNDLE_NAME + "/jndiname", "jdbc/roddb");
         Connection conn = HelpsDB.getConnection();
-        IDataSet dataSet = readDataSet();
+        IDataSet dataSet = readDataSet("testdata-for-jndi.xml");
         cleanlyInsert(dataSet, conn);
 
         String html = Helps.get("jndi", "announcements", "en");

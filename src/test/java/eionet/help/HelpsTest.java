@@ -81,13 +81,13 @@ public class HelpsTest {
     @Before
     public void importDataSet() throws Exception {
         Connection conn = HelpsDB.getConnection();
-        IDataSet dataSet = readDataSet();
+        IDataSet dataSet = readDataSet("testdata.xml");
         cleanlyInsert(dataSet, conn);
     }
 
 
-    private IDataSet readDataSet() throws Exception {
-        InputStream is = getClass().getClassLoader().getResourceAsStream("testdata.xml");
+    private IDataSet readDataSet(String sourceFile) throws Exception {
+        InputStream is = getClass().getClassLoader().getResourceAsStream(sourceFile);
         return new FlatXmlDataSetBuilder().build(is);
     }
 
