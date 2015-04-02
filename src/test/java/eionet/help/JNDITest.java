@@ -28,8 +28,6 @@ import org.junit.Rule;
 import org.junit.rules.ExpectedException;
 import org.junit.Test;
 import org.h2.jdbcx.JdbcDataSource;
-import javax.naming.Context;
-import javax.naming.InitialContext;
 
 
 import static org.junit.Assert.assertEquals;
@@ -67,26 +65,16 @@ public class JNDITest {
         ds.setURL("jdbc:h2:file:target/jndidb");
         ds.setUser("sa");
         ds.setPassword("sa");
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.apache.naming.java.javaURLContextFactory");
-        System.setProperty(Context.URL_PKG_PREFIXES, "org.apache.naming");
 
-        Context ic = new InitialContext();
-        ic.createSubcontext("java:");
-        ic.createSubcontext("java:comp");
-        ic.createSubcontext("java:comp/env");
-        ic.createSubcontext("java:comp/env/jdbc");
-        ic.bind("java:comp/env/" + Helps.DATASOURCE_NAME, ds);
+        JNDISupport.setUpCore();
+        JNDISupport.addSubCtxToTomcat("jdbc");
+        JNDISupport.addPropToTomcat(Helps.DATASOURCE_NAME, ds);
         return ds;
     }
 
     @AfterClass
     public static void cleanUpIC() throws Exception {
-        Context ic = new InitialContext();
-        ic.unbind("java:comp/env/" + Helps.DATASOURCE_NAME);
-        ic.destroySubcontext("java:comp/env/jdbc");
-        ic.destroySubcontext("java:comp/env");
-        ic.destroySubcontext("java:comp");
-        ic.destroySubcontext("java:");
+        JNDISupport.cleanUp();
         Helps.resetProps();
     }   
 
