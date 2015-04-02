@@ -21,7 +21,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.DefaultDatabaseTester;
 import org.dbunit.IDatabaseTester;
 import org.dbunit.operation.DatabaseOperation;
-import org.junit.AfterClass;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -38,10 +38,12 @@ import static org.junit.Assert.assertEquals;
  */
 public class JNDITest {
 
+    private static JdbcDataSource dataSource = null;
+
     @BeforeClass
     public static void loadDB() throws Exception {
         Liquibase liquibase = null;
-        Connection conn = createDataSourceInIC().getConnection();
+        Connection conn = createDataSource().getConnection();
         try {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
             liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor(), database);
@@ -59,21 +61,24 @@ public class JNDITest {
         }
     }
 
-    private static JdbcDataSource createDataSourceInIC() throws Exception {
-        // Construct DataSource
-        JdbcDataSource ds = new JdbcDataSource();
-        ds.setURL("jdbc:h2:file:target/jndidb");
-        ds.setUser("sa");
-        ds.setPassword("sa");
-
-        JNDISupport.setUpCore();
-        JNDISupport.addSubCtxToTomcat("jdbc");
-        JNDISupport.addPropToTomcat(Helps.DATASOURCE_NAME, ds);
-        return ds;
+    /**
+     * Construct DataSource.
+     */
+    private static JdbcDataSource createDataSource() throws Exception {
+        dataSource = new JdbcDataSource();
+        dataSource.setURL("jdbc:h2:file:target/jndidb");
+        dataSource.setUser("sa");
+        dataSource.setPassword("sa");
+        return dataSource;
     }
 
-    @AfterClass
-    public static void cleanUpIC() throws Exception {
+    @Before
+    public void setUpIC() throws Exception {
+        JNDISupport.setUpCore();
+    }   
+
+    @After
+    public void cleanUpIC() throws Exception {
         JNDISupport.cleanUp();
         Helps.resetProps();
     }   
@@ -92,14 +97,6 @@ public class JNDITest {
         PropertyConfigurator.configure(logProperties);
     }
 
-    @Before
-    public void importDataSet() throws Exception {
-        Connection conn = HelpsDB.getConnection();
-        IDataSet dataSet = readDataSet();
-        cleanlyInsert(dataSet, conn);
-    }
-
-
     private IDataSet readDataSet() throws Exception {
         InputStream is = getClass().getClassLoader().getResourceAsStream("testdata-for-jndi.xml");
         return new FlatXmlDataSetBuilder().build(is);
@@ -112,10 +109,32 @@ public class JNDITest {
         databaseTester.onSetup();
     }
 
+    /**
+     * Lookup data source under jdbc/helpdb.
+     */
     @Test
-    public void getJNDIScreen() throws Exception {
+    public void useDirectReference() throws Exception {
+        JNDISupport.addSubCtxToTomcat("jdbc");
+        JNDISupport.addPropToTomcat(Helps.DATASOURCE_NAME, dataSource);
+        Connection conn = HelpsDB.getConnection();
+        IDataSet dataSet = readDataSet();
+        cleanlyInsert(dataSet, conn);
+
         String html = Helps.get("jndi", "announcements", "en");
         assertEquals("We now have JNDI unit tests", html);
     }
 
+    @Test
+    public void useIndirectReference() throws Exception {
+        JNDISupport.addSubCtxToTomcat("jdbc");
+        JNDISupport.addPropToTomcat("jdbc/roddb", dataSource);
+        JNDISupport.addSubCtxToTomcat(Helps.RESOURCE_BUNDLE_NAME);
+        JNDISupport.addPropToTomcat(Helps.RESOURCE_BUNDLE_NAME + "/jndiname", "jdbc/roddb");
+        Connection conn = HelpsDB.getConnection();
+        IDataSet dataSet = readDataSet();
+        cleanlyInsert(dataSet, conn);
+
+        String html = Helps.get("jndi", "announcements", "en");
+        assertEquals("We now have JNDI unit tests", html);
+    }
 }

@@ -28,7 +28,17 @@ import eionet.help.util.Util;
 public class Helps {
 
     public static final String RESOURCE_BUNDLE_NAME = "help";
+    /**
+     * Conventional location of data sources in JNDI.
+     */
+    static final String JDBC_SUBCONTEXT = "jdbc";
+    /**
+     * Tomcat puts its stuff under java:comp/env.
+     */
     public static final String TOMCAT_CONTEXT = "java:comp/env/";
+    /**
+     * Location of data source if not configured for something else.
+     */
     static final String DATASOURCE_NAME = "jdbc/helpdb";
 
     private static Hashtable helps = null;
@@ -454,10 +464,12 @@ public class Helps {
                 // throw new HelpException("JNDI not configured properly");
             }
             try {
-                // Also add the a JDBC name if available.
+                // Also add the JDBC subcontext as that is a convention.
                 if (initContext != null) {
-                    Object ds = initContext.lookup(TOMCAT_CONTEXT + DATASOURCE_NAME);
-                    props.put(DATASOURCE_NAME, ds);
+                    for (Enumeration<Binding> e = initContext.listBindings(TOMCAT_CONTEXT + JDBC_SUBCONTEXT); e.hasMoreElements();) {
+                        Binding binding = e.nextElement();
+                        props.put(JDBC_SUBCONTEXT + "/" + binding.getName(), binding.getObject());
+                    }
                 }
             } catch (NamingException mre) {
                 // throw new HelpException("JNDI not configured properly");

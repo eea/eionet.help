@@ -38,10 +38,10 @@ public class HelpsDB {
                         DataSource dataSource = (DataSource) props.get(Helps.DATASOURCE_NAME);
                         conn = dataSource.getConnection();
                     } else {
-                        Class.forName((String)props.get("db.driver"));
-                        conn = DriverManager.getConnection((String)props.get("db.url"),
-                                (String)props.get("db.user"),
-                                (String)props.get("db.pwd"));
+                        Class.forName((String) props.get("db.driver"));
+                        conn = DriverManager.getConnection((String) props.get("db.url"),
+                                (String) props.get("db.user"),
+                                (String) props.get("db.pwd"));
                     }
                 }
             }
@@ -78,7 +78,7 @@ public class HelpsDB {
     }
 
     /**
-     * @param stmt
+     * @param stmt Statement object to close.
      */
     public static void closeStatement(Statement stmt) {
         if (stmt != null) {
@@ -91,7 +91,7 @@ public class HelpsDB {
 
     /**
      * @param rs
-     * @param stmt
+     * @param stmt Statement object to close.
      */
     public static void closeConnection(ResultSet rs, Statement stmt) {
         closeResultSet(rs);
