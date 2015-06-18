@@ -468,7 +468,7 @@ public class Helps {
                 if (initContext != null) {
                     for (Enumeration<Binding> e = initContext.listBindings(TOMCAT_CONTEXT + JDBC_SUBCONTEXT); e.hasMoreElements();) {
                         Binding binding = e.nextElement();
-                        props.put(JDBC_SUBCONTEXT + "/" + binding.getName(), binding.getObject());
+                        props.put(DATASOURCE_NAME, binding.getObject());
                     }
                 }
             } catch (NamingException mre) {
