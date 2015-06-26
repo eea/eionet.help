@@ -37,7 +37,17 @@ public class HelpsDB {
                     if (props.containsKey(Helps.DATASOURCE_NAME)) {
                         DataSource dataSource = (DataSource) props.get(Helps.DATASOURCE_NAME);
                         conn = dataSource.getConnection();
-                    } else {
+                    }
+                    else {
+                        // Search for property key starting with JDBC
+                        String[] keyset = props.keySet().toArray(new String[0]);
+                        for (String key : keyset) {
+                            if (key.startsWith(Helps.JDBC_SUBCONTEXT)) {
+                                DataSource dataSource = (DataSource) props.get(key);
+                                conn = dataSource.getConnection();
+                                return conn;
+                            }
+                        }
                         Class.forName((String) props.get("db.driver"));
                         conn = DriverManager.getConnection((String) props.get("db.url"),
                                 (String) props.get("db.user"),
