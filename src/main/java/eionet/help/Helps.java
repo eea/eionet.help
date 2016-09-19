@@ -10,7 +10,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.Vector;
 import javax.naming.Binding;
@@ -475,6 +474,12 @@ public class Helps {
                 // throw new HelpException("JNDI not configured properly");
             }
 
+            if (DbPropertiesLoader.dbProperties != null) {
+                props.put("db.driver", DbPropertiesLoader.dbProperties.getDbDriver());
+                props.put("db.url", DbPropertiesLoader.dbProperties.getDbUrl());
+                props.put("db.user", DbPropertiesLoader.dbProperties.getDbUser());
+                props.put("db.pwd", DbPropertiesLoader.dbProperties.getDbPassword());
+            }
             // Load from properties file
             if (props.size() == 0 || props.containsKey("propertiesfile")) {
                 try {
@@ -502,6 +507,10 @@ public class Helps {
             }
         }
         return props;
+    }
+    
+    public static boolean isLoaded() {
+        return helps != null;
     }
 
 }
