@@ -17,14 +17,6 @@ public class RemoteServiceTest {
     public ExpectedException exception = ExpectedException.none();
 
     @Test
-    public void authenticationFailure() throws Exception {
-        AppUser u = new AppUser();
-        exception.expect(SignOnException.class);
-        exception.expectMessage("Not authenticated");
-        u.authenticate("test", "failure");
-    }
-
-    @Test
     public void instantiation() throws Exception {
         AppUser u = new AppUser();
         u.authenticateForTest("test");
