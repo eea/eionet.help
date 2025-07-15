@@ -41,7 +41,7 @@ public class HelpsTest {
         Liquibase liquibase = null;
         try {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
-            liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor(), database);
+            liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor("."), database);
             liquibase.update("test");
             conn.close();
             conn = null;

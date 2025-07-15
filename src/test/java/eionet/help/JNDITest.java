@@ -46,7 +46,7 @@ public class JNDITest {
         Connection conn = createDataSource().getConnection();
         try {
             Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(conn));
-            liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor(), database);
+            liquibase = new Liquibase("db-struct.xml", new FileSystemResourceAccessor("."), database);
             liquibase.update("test");
         } catch (LiquibaseException e) {
             throw new DatabaseException(e);
@@ -66,7 +66,7 @@ public class JNDITest {
      */
     private static JdbcDataSource createDataSource() throws Exception {
         dataSource = new JdbcDataSource();
-        dataSource.setURL("jdbc:h2:file:target/jndidb");
+        dataSource.setURL("jdbc:h2:file:./target/jndidb");
         dataSource.setUser("sa");
         dataSource.setPassword("sa");
         return dataSource;
